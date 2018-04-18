@@ -1,7 +1,7 @@
 library(metafor)
 library(tidyverse)
 
-deer_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal_Ornealas_et_al_deer_ABUNDANCE_v2.csv", header = TRUE)
+deer_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal_Ornealas_et_al_deer_ABUNDANCE_v3.csv", header = TRUE)
 
 # only rows 1-142 have real data
 deer_data <- deer_raw_data[1:142,] %>%
@@ -51,4 +51,14 @@ rma1$QEp
 
 # Making a forest plot
 forest(rma1)
+
+# Make a nicer forest plot
+forest(rma1, slab = paste(deer_data$author, deer_data$pub_year, sep = ", "), 
+       xlim = c(-16, 6), at = log(c(.05, .25, 1, 4)), atransf = exp,
+       ilab = cbind(dat$tpos, dat$tneg, dat$cpos, dat$cneg), 
+       ilab.xpos = c(-9.5, -8, -6, -4.5), cex = .75)
+
+# Try a mixed effects model w/ publication year and biome as moderator
+res <- rma(effect_sizes$yi, effect_sizes$vi, mods = ~ pub_year + biome, data = deer_data)
+res
 
