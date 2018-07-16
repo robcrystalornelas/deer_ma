@@ -11,8 +11,6 @@ head(deer_raw_data)
 deer_data <- deer_raw_data[1:141,] %>%
   select(unique_id:notes)
 
-head(deer_data)
-
 # First calculate an effect size
 effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measuing, RD, RR, OR, SMD etc.
        n1i = deer_data$sample_size_t, # Then, follow with all of the columns needed to compute SMD
@@ -22,13 +20,13 @@ effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measui
        sd1i = deer_data$SD_t, 
        sd2i = deer_data$SD_c)
 effect_sizes_abundance # show the resulting data
+effect_sizes_abundance <- na.omit(effect_sizes_abundance)
+effect_sizes_abundance
 
 # First, try fitting with a fixed effects model
 fma_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
                      vi = effect_sizes_abundance$vi, # variances
                      method = "FE")
-fma_abundance
-
 
 # Then take the effect sizes we calculated, and run a random effects meta-analysis model
 rma1 <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
@@ -63,7 +61,7 @@ summary(rma1)
 rma1$QEp
 
 # Making a forest plot with the random effects model
-forest(rma1)
+forest(rma1, cex.lab = 1, cex.axis = 1, cex = 1)
 
 # funnel plot
 # first, carry out trim and fill
