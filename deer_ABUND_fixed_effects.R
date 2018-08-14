@@ -7,6 +7,7 @@ library(ggplot2)
 source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
 
 ## Clean data ####
+unique(abundance_raw_data$unique_id)
 
 # First calculate an effect sizes
 effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measuing, RD, RR, OR, SMD etc.
@@ -25,14 +26,3 @@ fma_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
                      vi = effect_sizes_abundance$vi, # variances
                      method = "FE")
 summary(fma_abundance)
-
-## Figures ####
-# Two types of funnel plots
-funnel(rma1)
-funnel(rma1, level=c(90, 95, 99), shade=c("white", "gray", "darkgray"), refline=0)
-       
-# Funnel plot
-plot(effect_sizes_abundance$yi,effect_sizes_abundance$vi)
-qplot(yi, vi, colour = author, 
-      data = effect_sizes_abundance)
-
