@@ -1,38 +1,27 @@
 ## Load Libraries ####
 library(metafor)
 library(tidyverse)
+library(ggplot2)
 
 ## Load data ####
-deer_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal_Ornealas_et_al_deer_ABUNDANCE_v3.csv", header = TRUE)
-deer_raw_data
+source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
 
-# only rows 1-141 have real data
-head(deer_raw_data)
-deer_data <- deer_raw_data[1:141,] %>%
-  select(unique_id:notes)
-
+## Clean data ####
 # First calculate an effect size
 effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measuing, RD, RR, OR, SMD etc.
-       n1i = deer_data$sample_size_t, # Then, follow with all of the columns needed to compute SMD
-       n2i = deer_data$sample_size_c, 
-       m1i = deer_data$mean_t, 
-       m2i = deer_data$mean_c, 
-       sd1i = deer_data$SD_t, 
-       sd2i = deer_data$SD_c)
-effect_sizes_abundance # show the resulting data
-effect_sizes_abundance <- na.omit(effect_sizes_abundance)
-effect_sizes_abundance
-
-# First, try fitting with a fixed effects model
-fma_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
-                     vi = effect_sizes_abundance$vi, # variances
-                     method = "FE")
+                                 m1i = abundance_raw_data$mean_t,       
+                                 n1i = abundance_raw_data$sample_size_t, # Then, follow with all of the columns needed to compute SMD
+                                 sd1i = abundance_raw_data$SD_t, 
+                                 m2i = abundance_raw_data$mean_c,
+                                 n2i = abundance_raw_data$sample_size_c, 
+                                 sd2i = abundance_raw_data$SD_c,
+                                 data = abundance_raw_data)
 
 # Then take the effect sizes we calculated, and run a random effects meta-analysis model
 rma1 <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
             vi = effect_sizes_abundance$vi, # variances
             methods = "REML") # REML is common estimator
-print(rma1, digits=2)
+print(rma1, digits=5)
 
 names(rma1) # these are all the different parts of an rma
 # b is the summary effect
@@ -69,7 +58,3 @@ par(mar=c(5,4,1,2))
 taf_rma <- trimfill(rma1)
 taf_rma
 
-# draw funnel plot with missing studies filled in
-funnel(rma1)
-funnel(rma1, level=c(90, 95, 99), shade=c("white", "gray", "darkgray"), refline=0)
-       

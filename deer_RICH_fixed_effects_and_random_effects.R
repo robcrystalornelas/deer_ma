@@ -3,15 +3,14 @@ library(metafor)
 library(tidyverse)
 
 ## Load data ####
-richness_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal-Ornelas_et_al_deer_RICHNESS.csv", header = TRUE)
-head(richness_raw_data)
+source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
 
 ## Clean data ####
 deer_richness <- richness_raw_data[1:10,] %>%
   select(unique_id:notes)
 
 head(deer_richness)
-
+dim(deer_richness)
 ## Analyze data ####
 
 # First calculate effect size
@@ -59,7 +58,8 @@ predint(richness_rma_dl, 95)
 ## Make forest plots ####
 # Forest plots require that we do any labeling in the function where we run the analysis
 forest(richness_rma_dl)
-?forest
+
 ## Make funnel plot ####
 # Controversial, especially if you've done an exhaustive literature search
 funnel(richness_rma_dl)
+

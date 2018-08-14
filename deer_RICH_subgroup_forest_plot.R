@@ -4,7 +4,7 @@ library(tidyverse)
 
 ## Import data ####
 ## Load data ####
-richness_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal-Ornelas_et_al_deer_RICHNESS.csv", header = TRUE)
+source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
 head(richness_raw_data)
 
 ## Clean data ####
@@ -30,6 +30,7 @@ mixed_effects_richness <- rma(yi, vi, mods = ~ pub_year + native_or_introduced +
                               data = richness_effect_sizes,
                               slab = paste(author, pub_year, sep = ", "))
 forest(mixed_effects_richness)
+mixed_effects_richness
 
 ### set up forest plot (with 2x2 table counts added; rows argument is used
 ### to specify exactly in which rows the outcomes will be plotted)
@@ -37,7 +38,7 @@ forest(mixed_effects_richness)
 par(mar=c(4,4,1,2))
 
 op <- par(cex=0.75, font=1)
-forest(mixed_effects_richness, 
+forest(mixed_effects_richness,
        xlim=c(-8, 4), # What are horizontal limits of your plot (I got this from the original, non-moderated forest plot)
        at=c(-6, -4, -2, 0, 1),  # Where do x axis tick marks go?
 #      atransf=exp, # use this if we're doing any transforming
@@ -65,3 +66,5 @@ text(3, 19, "Hedge's D [95% CI]", pos=2)
 
 ### set par back to the original settings
 par(op)
+
+

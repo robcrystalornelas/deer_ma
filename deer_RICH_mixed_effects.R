@@ -3,8 +3,7 @@ library(metafor)
 library(tidyverse)
 
 ## Load data ####
-richness_raw_data <- read.csv("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/data_for_Crystal-Ornelas_et_al_deer_RICHNESS.csv", header = TRUE)
-head(richness_raw_data)
+source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
 
 ## Clean data ####
 deer_richness <- richness_raw_data[1:10,] %>%
