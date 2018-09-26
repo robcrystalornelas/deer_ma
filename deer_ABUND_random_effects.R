@@ -23,38 +23,32 @@ rma1 <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
             methods = "REML") # REML is common estimator
 print(rma1, digits=5)
 
-names(rma1) # these are all the different parts of an rma
-# b is the summary effect
-# ci.lb is left CI
-# ci.up is the right bound of the CI
-# vb is variance-covariance of summary
-# fit.stats is model fit statistics
-#yi is vector of effect sizes
-#vi is vector of variances of effect size
+# Calculating prediction intervals
+predint <- function(x,pi) {
+alpha <- (1-(pi*.01))/2
+t <- abs(qt(alpha,(x$k-1)))
+sdp <- sqrt(x$se^2+x$tau2) # pooled standard deviation
+lo<-x$b-(sdp*t) # low PI
+hi <- x$b+(sdp*t)  # high pi
+paste(pi, "% prediction interval:", round(lo, digits =2), ",", round(hi,digits=2))  
+}
+predint(rma1, 95)
 
-# So this is summary effect
-rma1$b
-
-# these are lower and upper CI
-rma1$ci.lb
-rma1$ci.ub
-
-# Which study contributed the most?
-contributions <- 1/rma1$vi/sum(1/rma1$vi) * 100
-contributions
-
-# chck out summary info from MA
-summary(rma1)
-
-# Hows p-values from Q-test for heterogeneity?
-rma1$QEp
-
-# Making a forest plot with the random effects model
+# figures ####
+# Forest plot
 forest(rma1, cex.lab = 1, cex.axis = 1, cex = 1)
 
-# funnel plot
-# first, carry out trim and fill
-par(mar=c(5,4,1,2))
-taf_rma <- trimfill(rma1)
-taf_rma
+## Figures ####
+# Two types of funnel plots
+funnel(rma1)
+funnel(rma1, level=c(90, 95, 99), shade=c("white", "gray", "darkgray"), refline=0)
 
+## Publication bias #### 
+# Funnel plot
+plot(effect_sizes_abundance$yi,effect_sizes_abundance$vi)
+qplot(yi, vi, colour = author, 
+      data = effect_sizes_abundance)
+
+# Trim-and-fill
+tf1 <- trimfill(rma1)
+print(tf1, digits = 2, comb.fixed = TRUE)

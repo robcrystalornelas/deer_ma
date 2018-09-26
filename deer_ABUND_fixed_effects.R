@@ -25,4 +25,4 @@ effect_sizes_abundance # show the resulting data
 fma_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
                      vi = effect_sizes_abundance$vi, # variances
                      method = "FE")
-summary(fma_abundance)
+fma_abundance

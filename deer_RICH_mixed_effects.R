@@ -25,8 +25,13 @@ richness_effect_sizes # show the resulting data
 
 # Then, calculate a mixed effects model
 # Do some moderators find bigger or smaller effect?
-mixed_effects_richness <- rma(yi, vi, mods = ~ pub_year + native_or_introduced + island_or_mainland + biome,
+names(richness_effect_sizes)
+levels(richness_effect_sizes$bird.guild)
+mixed_effects_richness <- rma(yi, 
+                              vi, 
+                              mods = ~ island_or_mainland,
                               method = "REML",
                               data = richness_effect_sizes,
                               slab = paste(author, pub_year, sep = ""))
 mixed_effects_richness
+
