@@ -1,5 +1,6 @@
 ## Load libraries ####
 library(metafor)
+library(metaviz)
 
 ## Load data ####
 source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
@@ -29,3 +30,5 @@ richness_effect_sizes$unique_id
 richness_rma <- rma(yi, vi, method = "FE", data=richness_effect_sizes)
 richness_rma
 summary(richness_rma)
+
+

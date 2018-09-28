@@ -24,4 +24,4 @@ mixed_effect_abunda_res <- rma(yi, # outcome
            data = abundance_effect_sizes,
            slab = paste(author, pub_year, sep = ""))
 mixed_effect_abunda_res
-
+## Diet + Habitat_Type + IUCN_Trend + Migrant

@@ -18,10 +18,10 @@ effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measui
                                  data = abundance_raw_data)
 
 # Then take the effect sizes we calculated, and run a random effects meta-analysis model
-rma1 <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
+random_effects_abundance_results <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
             vi = effect_sizes_abundance$vi, # variances
-            methods = "REML") # REML is common estimator
-print(rma1, digits=5)
+            methods = "DL") # REML is common estimator
+print(random_effects_abundance_results, digits=5)
 
 # Calculating prediction intervals
 predint <- function(x,pi) {
@@ -35,13 +35,21 @@ paste(pi, "% prediction interval:", round(lo, digits =2), ",", round(hi,digits=2
 predint(rma1, 95)
 
 # figures ####
-# Forest plot
-forest(rma1, cex.lab = 1, cex.axis = 1, cex = 1)
+# General forest plot
+viz_forest(x = random_effects_abundance_results, 
+           method = "DL",
+           # group = "Nesting Location", 
+           # type = "summary_only",
+           # study_labels = random_effects_abundance_results[1:131, "unique_id"], 
+           xlab = "Hedge's d",
+           col = "Greys"
+           #variant = "thick"
+)
 
 ## Figures ####
 # Two types of funnel plots
-funnel(rma1)
-funnel(rma1, level=c(90, 95, 99), shade=c("white", "gray", "darkgray"), refline=0)
+funnel(random_effects_abundance_results)
+funnel(random_effects_abundance_results, level=c(90, 95, 99), shade=c("white", "gray", "darkgray"), refline=0)
 
 ## Publication bias #### 
 # Funnel plot
@@ -50,5 +58,5 @@ qplot(yi, vi, colour = author,
       data = effect_sizes_abundance)
 
 # Trim-and-fill
-tf1 <- trimfill(rma1)
+tf1 <- trimfill(random_effects_abundance_results)
 print(tf1, digits = 2, comb.fixed = TRUE)

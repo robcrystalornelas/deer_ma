@@ -21,7 +21,7 @@ richness_effect_sizes <- escalc("SMD", # Specify the outcome that we are measuin
 richness_effect_sizes # show the resulting data
 
 # Random effects model
-richness_rma_dl <- rma(yi, vi, method = "REML", data = richness_effect_sizes, slab = paste(author, pub_year))
+richness_rma_dl <- rma(yi, vi, method = "DL", data = richness_effect_sizes, slab = paste(author, pub_year))
 summary(richness_rma_dl)
 
 # Prediction intervals are they way to go instead of confidence intervals
@@ -44,7 +44,18 @@ predint(richness_rma_dl, 95)
 
 ## Make forest plots ####
 # Forest plots require that we do any labeling in the function where we run the analysis
-forest(richness_rma_dl)
+richness_rma_dl$level
+richness_rma_dl$slab
+
+richness_rma_dl[1:12,]
+viz_forest(x = richness_rma_dl,
+           method = "DL",
+           study_labels = richness_rma_dl$slab, # In order to label your y-axis
+           xlab = "Hedge's d",
+           col = "Greys",
+           variant = "rain"
+)
+
 
 ## publication bias ####
 # Controversial, especially if you've done an exhaustive literature search

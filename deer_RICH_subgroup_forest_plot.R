@@ -25,7 +25,7 @@ richness_effect_sizes <- escalc("SMD", # Specify the outcome that we are measuin
                                 sd2i = deer_richness$SD_c, data = deer_richness)
 richness_effect_sizes # show the resulting data
 
-mixed_effects_richness <- rma(yi, vi, mods = ~ pub_year + native_or_introduced + island_or_mainland + biome,
+mixed_effects_richness <- rma(yi, vi, mods = ~ pub_year + island_or_mainland + biome,
                               method = "REML",
                               data = richness_effect_sizes,
                               slab = paste(author, pub_year, sep = ", "))
@@ -39,16 +39,18 @@ par(mar=c(4,4,1,2))
 
 op <- par(cex=0.75, font=1)
 forest(mixed_effects_richness,
-       xlim=c(-8, 4), # What are horizontal limits of your plot (I got this from the original, non-moderated forest plot)
+       xlim=c(-6, 8), # What are horizontal limits of your plot (I got this from the original, non-moderated forest plot)
        at=c(-6, -4, -2, 0, 1),  # Where do x axis tick marks go?
 #      atransf=exp, # use this if we're doing any transforming
 #      ilab=cbind(dat.bcg$tpos, dat.bcg$tneg, dat.bcg$cpos, dat.bcg$cneg), # vector with more info to be added to plot
 #      ilab.xpos=c(-9.5,-8,-6,-4.5), # x-axis position for the labels
        cex=1, 
        ylim=c(-1, 20), # what are limits of the plot in the y-axis
-    order=order(richness_effect_sizes$native_or_introduced), 
-       rows=c(3,7:1), #you have to decide where lines of text go from bottom of forest plot to top. Make sure all rows are captures in this function
-       xlab="Standardized Mean Difference", 
+       order=order(richness_effect_sizes$island_or_mainland), 
+       rows=c(3,9:1), #you have to decide where lines of text go from bottom of forest plot to top. 
+       #Make sure all rows are captures in this function
+ 
+      xlab="Standardized Mean Difference", 
        mlab="", 
        psize=1)
 
