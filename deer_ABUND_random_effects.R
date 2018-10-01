@@ -20,7 +20,8 @@ effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measui
 # Then take the effect sizes we calculated, and run a random effects meta-analysis model
 random_effects_abundance_results <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
             vi = effect_sizes_abundance$vi, # variances
-            methods = "DL") # REML is common estimator
+            method = "REML") # REML is common estimator
+
 print(random_effects_abundance_results, digits=5)
 
 # Calculating prediction intervals
@@ -32,19 +33,26 @@ lo<-x$b-(sdp*t) # low PI
 hi <- x$b+(sdp*t)  # high pi
 paste(pi, "% prediction interval:", round(lo, digits =2), ",", round(hi,digits=2))  
 }
-predint(rma1, 95)
+predint(random_effects_abundance_results, 95)
 
 # figures ####
 # General forest plot
-viz_forest(x = random_effects_abundance_results, 
-           method = "DL",
-           # group = "Nesting Location", 
+forest_plot_abundance_random_effects <- viz_forest(
+          x = random_effects_abundance_results, 
+           method = "REML",
            # type = "summary_only",
            # study_labels = random_effects_abundance_results[1:131, "unique_id"], 
            xlab = "Hedge's d",
-           col = "Greys"
+           col = "Blues"
            #variant = "thick"
 )
+forest_plot_abundance_random_effects
+pdf(file="~/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/figures/forest_plot_abundance_full_model.pdf")
+forest_plot_abundance_random_effects
+dev.off()
+dev.off()
+
+
 
 ## Figures ####
 # Two types of funnel plots

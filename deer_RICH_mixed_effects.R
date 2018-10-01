@@ -35,3 +35,4 @@ mixed_effects_richness <- rma(yi,
                               slab = paste(author, pub_year, sep = ""))
 mixed_effects_richness
 
+
