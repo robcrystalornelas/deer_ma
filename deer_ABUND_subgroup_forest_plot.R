@@ -58,9 +58,11 @@ me_forest_plot_nesting <- viz_forest(x = mixed_effect_abundance_nesting,
            xlab = "Hedge's d",
            col = "Greys",
            variant = "thick",
-           text_size = 8
+           text_size = 7,
+           annotate_CI = TRUE
            )
 me_forest_plot_nesting
+
 me_forest_plot_nesting$data
 pdf(file="~/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/figures/forest_plot_abundance_and_nesting_location.pdf")
 me_forest_plot_nesting

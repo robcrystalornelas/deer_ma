@@ -17,9 +17,10 @@ abundance_effect_sizes <- escalc("SMD", # Specify the outcome that we are measui
 
 # Mixed effects model w/ moderators
 names(abundance_effect_sizes)
+abundance_effect_sizes
 mixed_effect_abunda_res <- rma(yi, # outcome
            vi, # measure of variance
-           mods = ~ Nesting_Location + Diet + Habitat_Type + IUCN_Trend + Migrant, # multiple moderating variables modeled as main effects
+           mods = ~ Nesting_Location + Diet + Habitat_Type + IUCN_Trend + Migrant -1, # multiple moderating variables modeled as main effects
            method = "REML",
            data = abundance_effect_sizes,
            slab = paste(author, pub_year, sep = ""))
