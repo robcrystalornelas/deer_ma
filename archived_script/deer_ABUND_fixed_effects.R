@@ -4,7 +4,7 @@ library(tidyverse)
 library(ggplot2)
 
 ## Load data ####
-source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
+source("~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R")
 
 ## Clean data ####
 unique(abundance_raw_data$unique_id)
@@ -18,11 +18,12 @@ effect_sizes_abundance <- escalc("SMD", # Specify the outcome that we are measui
   n2i = abundance_raw_data$sample_size_c, 
   sd2i = abundance_raw_data$SD_c,
   data = abundance_raw_data)
-
 effect_sizes_abundance # show the resulting data
 
 # Fixed effects MA model
-fma_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
+fixed_effects_model_abundance <- rma(yi = effect_sizes_abundance$yi, # Outcome variable
                      vi = effect_sizes_abundance$vi, # variances
-                     method = "FE")
-fma_abundance
+                     method = "FE",
+                     digits = 3)
+fixed_effects_model_abundance
+

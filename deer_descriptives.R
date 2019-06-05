@@ -3,7 +3,7 @@ library(metafor)
 library(tidyverse)
 
 ## Load data ####
-source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
+source("/Users/rpecchia/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R")
 
 # subset only studies that we include in the meta-analysis
 all_studies_combined <- rbind(descriptives_richness,descriptives_abundance)

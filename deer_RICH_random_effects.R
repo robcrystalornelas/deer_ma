@@ -1,5 +1,6 @@
 ## Load libraries ####
 library(metafor)
+library(metaviz)
 
 ## Load data ####
 source("/Users/rpecchia/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/scripts/deer_ma/deer_source_data.R")
@@ -49,15 +50,16 @@ richness_rma_dl$slab
 richness_rma_dl[1:12,]
 
 richness_forest_plot_random_effects <- viz_forest(x = richness_rma_dl,
-           method = "DL",
+           method = "REML",
            study_labels = richness_rma_dl$slab, # In order to label your y-axis
            xlab = "Hedge's d",
            col = "Greys",
            variant = "thick",
-           text_size = 7,
+           text_size = 6,
            annotate_CI = TRUE
 )
 richness_forest_plot_random_effects
+
 pdf(file="~/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/figures/forest_plot_richness_full.pdf")
 richness_forest_plot_random_effects
 dev.off()
