@@ -33,3 +33,17 @@ plot(unique_studies$island_or_mainland)
 plot(unique_studies$native_or_nonnative)
 unique_studies$native_or_nonnative
 
+# number of bird species
+unique(abundance_raw_data$bird_species_latin)
+unique(abundance_raw_data$bird_family)
+
+# average number of species per manuscript
+head(abundance_raw_data)
+abundance_raw_data %>%
+  group_by('unique_id') %>%
+  count(bird_species_latin)
+
+
+counted_species <- abundance_raw_data %>% group_by(unique_id, bird_species_latin) %>% summarize(count=n())
+counted_species
+View(counted_species)

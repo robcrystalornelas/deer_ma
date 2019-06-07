@@ -30,7 +30,6 @@ random_effects_abundance_results <-
   rma(yi = effect_sizes_abundance$yi, # Outcome variable
       vi = effect_sizes_abundance$vi, # Variance
       method = "REML") # REML is common estimator
-
 print(random_effects_abundance_results, digits = 3)
 
 # Calculating prediction intervals
@@ -48,6 +47,9 @@ predint <- function(x, pi) {
 }
 predint(random_effects_abundance_results, 95)
 
+effect_sizes_abundance
+sort(effect_sizes_abundance$yi)
+
 # figures ####
 # General forest plot
 forest_plot_abundance_random_effects <- viz_forest(
@@ -56,8 +58,9 @@ forest_plot_abundance_random_effects <- viz_forest(
   # type = "summary_only",
   # study_labels = random_effects_abundance_results[1:131, "unique_id"],
   xlab = "Hedge's d",
-  col = "Blues"
-  #variant = "thick"
+  col = "Blues",
+  #variant = "thick",
+  annotate_CI = TRUE
 )
 forest_plot_abundance_random_effects
 pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_full_model.pdf")
