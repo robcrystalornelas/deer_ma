@@ -63,20 +63,16 @@ predint(richness_rma_dl, 95)
 
 ## Make forest plots ####
 # Forest plots require that we do any labeling in the function where we run the analysis
-richness_rma_dl$level
-richness_rma_dl$slab
-richness_rma_dl[1:12, ]
 
 richness_forest_plot_random_effects <-
   viz_forest(
     x = richness_rma_dl,
     method = "REML",
     study_labels = richness_rma_dl$slab,
-    # In order to label your y-axis
-    xlab = "Hedge's d",
+    xlab = "Hedges' g",
     col = "Greys",
-    variant = "thick",
-    text_size = 6,
+    summary_col = "Oranges",
+    text_size = 10,
     annotate_CI = TRUE
   )
 richness_forest_plot_random_effects

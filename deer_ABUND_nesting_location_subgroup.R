@@ -40,28 +40,29 @@ mixed_effect_abundance_nesting <- rma(
 mixed_effect_abundance_nesting
 
 # Forest plot nesting data
-mixed_effect_abundance_nesting
+# first, if we want to add in any summary-level info create a new summary table
+summary_table_nesting_locations <- data.frame(
+  "Location" = c("Brood Parasite","Building","Cavity","Ground","Shrub","Tree"),
+  N = c(2,1,25,28,37,38))
+head(summary_table_nesting_locations)
+
 me_forest_plot_nesting <-
   viz_forest(
     x = mixed_effect_abundance_nesting,
     method = "REML",
     type = "summary_only",
-    summary_label = c(
-      "Brood Parasite",
-      "Building",
-      "Cavity",
-      "Ground",
-      "Shrub",
-      "Tree"
-    ),
+    summary_table = summary_table_nesting_locations,
     confidence_level = 0.95,
-    xlab = "Hedge's g",
+    xlab = "Hedges' g",
     col = "Greys",
-    text_size = 7
+    text_size = 7,
+    annotate_CI = TRUE
   )
+
 me_forest_plot_nesting
-pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_and_nesting_location.pdf")
+pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_and_nesting_location.pdf", width = 18, height = 5)
 me_forest_plot_nesting
+dev.off()
 dev.off()
 dev.off()
 

@@ -55,13 +55,15 @@ sort(effect_sizes_abundance$yi)
 forest_plot_abundance_random_effects <- viz_forest(
   x = random_effects_abundance_results,
   method = "REML",
-  # type = "summary_only",
-  # study_labels = random_effects_abundance_results[1:131, "unique_id"],
-  xlab = "Hedge's d",
-  col = "Blues",
-  #variant = "thick",
-  annotate_CI = TRUE
+  # study_labels = NULL,
+  xlab = "Hedges' g",
+  col = "Greys",
+  summary_col = "Oranges",
+  annotate_CI = FALSE,
+  text_size = 7
 )
+
+dev.off()
 forest_plot_abundance_random_effects
 pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_full_model.pdf")
 forest_plot_abundance_random_effects
