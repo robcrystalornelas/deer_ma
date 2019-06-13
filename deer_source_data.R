@@ -23,14 +23,15 @@ descriptives_richness <-
     experiment_length_in_days,
     latitude,
     longitude,
-    country
+    country,
+    sample_size_c,
+    sample_size_t
   )
 
 abundance_raw_data <-
   read.csv("~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/data_for_Crystal_Ornealas_et_al_deer_ABUNDANCE_v6.csv",
            header = TRUE
   )
-
 descriptives_abundance <-
   select(
     abundance_raw_data,
@@ -44,6 +45,8 @@ descriptives_abundance <-
     experiment_length_in_days,
     latitude,
     longitude,
-    country
+    country,
+    sample_size_c,
+    sample_size_t
   )
 dim(abundance_raw_data)
