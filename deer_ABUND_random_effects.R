@@ -2,16 +2,15 @@
 library(metafor)
 library(tidyverse)
 library(ggplot2)
-library(metaviz)
 
 ## Load data ####
 source(
-  "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
+  "~/Desktop/research/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
 )
 
 ## Clean data ####
 
-# First calculate an effect size
+# Calculate effect sizes for each row of data
 effect_sizes_abundance <-
   escalc(
     "SMD", # Specify the outcome that we are measuing, RD, RR, OR, SMD etc.
@@ -25,69 +24,61 @@ effect_sizes_abundance <-
     data = abundance_raw_data
   )
 
-# Then take the effect sizes we calculated, and run a random effects meta-analysis model
+# random effects model, assigning random effect to each row in database
 random_effects_abundance_results <-
   rma(yi = effect_sizes_abundance$yi, # Outcome variable
       vi = effect_sizes_abundance$vi, # Variance
       method = "REML") # REML is common estimator
 print(random_effects_abundance_results, digits = 3)
 
-# Calculating prediction intervals
-predint <- function(x, pi) {
-  alpha <- (1 - (pi * .01)) / 2
-  t <- abs(qt(alpha, (x$k - 1)))
-  sdp <- sqrt(x$se ^ 2 + x$tau2) # pooled standard deviation
-  lo <- x$b - (sdp * t) # low PI
-  hi <- x$b + (sdp * t)  # high pi
-  paste(pi,
-        "% prediction interval:",
-        round(lo, digits = 2),
-        ",",
-        round(hi, digits = 2))
-}
-predint(random_effects_abundance_results, 95)
+## Mixed effects meta-analytic model account for data coming from the same articles
+mixed_effects_abundance_v2 <- rma.mv(yi, vi, random = ~ 1 | unique_id, data = effect_sizes_abundance)
+mixed_effects_abundance_v2
 
-effect_sizes_abundance
-sort(effect_sizes_abundance$yi)
 
 # figures ####
-# General forest plot
-forest_plot_abundance_random_effects <- viz_forest(
-  x = random_effects_abundance_results,
-  method = "REML",
-  # study_labels = NULL,
-  xlab = "Hedges' g",
-  col = "Greys",
-  summary_col = "Oranges",
-  annotate_CI = FALSE,
-  text_size = 7
-)
+# First, order by years
+effect_sizes_abundance <- effect_sizes_abundance[order(effect_sizes_abundance$pub_year),]
+effect_sizes_abundance$pub_year
+plyr::count(effect_sizes_abundance$unique_id)
+# First, get labels, so that we don't repeat farming systems
+abundance_study_labels <- c(
+  "DeGraaf, 1991",
+  strrep("", 1:5),
+  "Berger, 2001",
+  strrep("", 1:11),
+  "McShea, 2002",
+  strrep("", 1:2),
+  "Anderson, 2007",
+  strrep("", 1:15),
+  "Okuda, 2012",
+  strrep("", 1:31),
+  "Tymkiw, 2013",
+  strrep("", 1:26),
+  "Graham, 2014",
+  strrep("", 1:33),
+  "Carpio, 2015")
+length(abundance_study_labels)
 
+plyr::count(effect_sizes_abundance$author)
+forest(
+  effect_sizes_abundance$yi,
+  effect_sizes_abundance$vi,
+  annotate = FALSE,
+  xlab = "Hedge's g",
+  slab = abundance_study_labels,
+  ylim = c(-1,138),
+  cex = 1.3,
+  pch = 15,
+  cex.lab = 1.3,
+  col = c(
+    rep('#73D055FF', 6),
+    rep('#cc6a70ff', 12),
+    rep("#1F968BFF", 3),
+    rep('#F66B4D', 16),
+    rep('#481567FF', 32),
+    rep('#f9b641ff', 27),
+    rep('#404788FF', 34),
+    rep ("#3CBB75FF", 1)))
+addpoly(random_effects_abundance_results, row = 0 , cex = 1.5,col ="black", annotate = TRUE, mlab = "Summary")
 dev.off()
-forest_plot_abundance_random_effects
-pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_full_model.pdf")
-forest_plot_abundance_random_effects
-dev.off()
-dev.off()
-
-
-
-## Figures ####
-# Two types of funnel plots
-funnel(random_effects_abundance_results)
-funnel(
-  random_effects_abundance_results,
-  level = c(90, 95, 99),
-  shade = c("white", "gray", "darkgray"),
-  refline = 0
-)
-
-## Publication bias ####
-# Funnel plot
-plot(effect_sizes_abundance$yi, effect_sizes_abundance$vi)
-qplot(yi, vi, colour = author,
-      data = effect_sizes_abundance)
-
-# Trim-and-fill
-tf1 <- trimfill(random_effects_abundance_results)
-print(tf1, digits = 2, comb.fixed = TRUE)

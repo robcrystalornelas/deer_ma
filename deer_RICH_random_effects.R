@@ -1,10 +1,11 @@
 ## Load libraries ####
 library(metafor)
 library(metaviz)
+library(cowplot)
 
 ## Load data ####
 source(
-  "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
+  "~/Desktop/research/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
 )
 
 ## Clean data ####
@@ -35,56 +36,49 @@ richness_rma_dl <-
     yi,
     vi,
     method = "REML",
-    data = richness_effect_sizes,
-    slab = paste(author, pub_year)
+    data = richness_effect_sizes
   )
 summary(richness_rma_dl)
 
-# Prediction intervals are they way to go instead of confidence intervals
-predint <- function(x, pi) {
-  pi <- 95
-  alpha <- (1 - (pi * .01)) / 2
-  t <- abs(qt(alpha, (x$k - 1)))
-  sdp <- sqrt(x$se ^ 2 + x$tau2)
-  lo <- x$b - (sdp * t)
-  hi <- x$b + (sdp * t)
-  paste(pi,
-        "% prediction interval:",
-        round(lo, digits = 3),
-        round(hi, digits = 3))
-}
-
-predint(richness_rma_dl, 95)
-# can totally include 0! and neg!
-# What this means is that studies can find opposite effect of overall
-# mean effect or even most of the studies included in our MA.
-# Lots of possible reasons why we might get opposite results
-# doesn't mean our conclusion is wrong, just means they're possible!
-
 ## Make forest plots ####
-# Forest plots require that we do any labeling in the function where we run the analysis
+richness_effect_sizes <- richness_effect_sizes[order(richness_effect_sizes$pub_year),]
+richness_effect_sizes$pub_year
+plyr::count(richness_effect_sizes$unique_id)
+# First, get labels, so that we don't repeat farming systems
+richness_study_labels <- c(
+  "DeGraaf, 1991",
+  "McShea, 1992",
+  "DeCalesta, 1994a",
+  "DeCalesta, 1994b",
+  "DeCalesta, 1994c",
+  "Anderson, 2007",
+  "Okuda, 2012",
+  "Tymkiw, 2013",
+  "Graham, 2014",
+  "Chollet, 2014")
+length(richness_study_labels)
 
-richness_forest_plot_random_effects <-
-  viz_forest(
-    x = richness_rma_dl,
-    method = "REML",
-    study_labels = richness_rma_dl$slab,
-    xlab = "Hedges' g",
-    col = "Greys",
-    summary_col = "Oranges",
-    text_size = 10,
-    annotate_CI = TRUE
-  )
-richness_forest_plot_random_effects
-
-pdf(file = "~/Desktop/Deer Meta Analysis Brown J Beardsley C Ornealas R Lockwood J/figures/forest_plot_richness_full.pdf")
-richness_forest_plot_random_effects
+plyr::count(richness_effect_sizes$author)
+forest(
+  richness_effect_sizes$yi,
+  richness_effect_sizes$vi,
+  annotate = FALSE,
+  xlab = "Hedge's g",
+  slab = richness_study_labels,
+  ylim = c(-1,10),
+  cex = 1.3,
+  pch = 15,
+  cex.lab = 1.3,
+  col = c(
+    rep('#73D055FF', 1),
+    rep('#cc6a70ff', 1),
+    rep("#1F968BFF", 1),
+    rep("#1F968BFF", 1),
+    rep("#1F968BFF", 1),
+    rep('#F66B4D', 1),
+    rep('#481567FF', 1),
+    rep('#f9b641ff', 1),
+    rep('#404788FF', 1),
+    rep ("#3CBB75FF", 1)))
+addpoly(random_effects_abundance_results, row = 0 , cex = 1.5,col ="black", annotate = TRUE, mlab = "Summary")
 dev.off()
-dev.off()
-
-## publication bias ####
-# Controversial, especially if you've done an exhaustive literature search
-funnel(richness_rma_dl)
-
-tf1 <- trimfill(richness_rma_dl)
-print(tf1, digits = 2, comb.fixed = TRUE)

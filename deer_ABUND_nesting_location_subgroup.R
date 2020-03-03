@@ -6,7 +6,7 @@ library(metaviz)
 ## Import and load data ####
 ## Load data ####
 source(
-  "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
+  "~/Desktop/research/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R"
 )
 
 ### Calculate effects size
@@ -28,89 +28,109 @@ effect_sizes_abundance <-
 effect_sizes_abundance 
 
 ## Only for nesting location
-mixed_effect_abundance_nesting <- rma(
+mixed_effect_abundance_nesting <- rma.mv(
   yi,  # outcome
   vi,  # measure of variance
   mods = ~ Nesting_Location - 1, # multiple moderating variables modeled as main effects
+  random = ~ 1 | unique_id,
   method = "REML",
-  data = effect_sizes_abundance,
-  weighted = TRUE,
-  slab = paste(author, pub_year, sep = "")
+  digits = 4,
+  data = effect_sizes_abundance
 )
 mixed_effect_abundance_nesting
 
 # Forest plot nesting data
+subgroup_samplesize <- c(2,1,25,28,37,38)
+forest_plot_nesting_location <- forest(mixed_effect_abundance_nesting$b,
+                                     ci.lb = mixed_effect_abundance_nesting$ci.lb,
+                                     ci.ub = mixed_effect_abundance_nesting$ci.ub,
+                                     ilab = subgroup_samplesize,
+                                     ilab.xpos = c(-4),
+                                     annotate = TRUE,
+                                     xlab = "Hedges' g",
+                                     slab = c("Brood parasite", "Building", "Cavity","Ground","Shrub","Tree"),
+                                     cex = 2,
+)
+
+op <- par(cex=2, font=2)
+text(-8, 7.2, "Location")
+text(-4, 7.2, "Sample Size")
+text(8.3, 7.2, "Hedges' g [95% CI]")
+dev.off()
+
+
 # first, if we want to add in any summary-level info create a new summary table
 summary_table_nesting_locations <- data.frame(
   "Location" = c("Brood Parasite","Building","Cavity","Ground","Shrub","Tree"),
   N = c(2,1,25,28,37,38))
 head(summary_table_nesting_locations)
 
-me_forest_plot_nesting <-
-  viz_forest(
-    x = mixed_effect_abundance_nesting,
-    method = "REML",
-    type = "summary_only",
-    summary_table = summary_table_nesting_locations,
-    confidence_level = 0.95,
-    xlab = "Hedges' g",
-    col = "Greys",
-    text_size = 7,
-    annotate_CI = TRUE
-  )
 
-me_forest_plot_nesting
-pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_and_nesting_location.pdf", width = 18, height = 5)
-me_forest_plot_nesting
-dev.off()
-dev.off()
-dev.off()
-
-## To get all the real data, have to run separate rmas for each nesting type
-rma_parasite <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="brood parasite"))
-rma_parasite
-
-rma_building <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="building"))
-rma_building
-
-rma_cavity <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="cavity"))
-rma_cavity
-
-rma_ground <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="ground"))
-rma_ground
-
-rma_shrub <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="shrub"))
-rma_shrub
-
-rma_tree <- rma(
-  yi,  # outcome
-  vi,  # measure of variance
-  method = "REML",
-  data = effect_sizes_abundance,
-  subset = (Nesting_Location=="tree"))
-rma_tree
+# me_forest_plot_nesting <-
+#   viz_forest(
+#     x = mixed_effect_abundance_nesting,
+#     method = "REML",
+#     type = "summary_only",
+#     summary_table = summary_table_nesting_locations,
+#     confidence_level = 0.95,
+#     xlab = "Hedges' g",
+#     col = "Greys",
+#     text_size = 7,
+#     annotate_CI = TRUE
+# #   )
+# 
+# me_forest_plot_nesting
+# pdf(file = "~/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/figures/forest_plot_abundance_and_nesting_location.pdf", width = 18, height = 5)
+# me_forest_plot_nesting
+# dev.off()
+# dev.off()
+# dev.off()
+# 
+# ## To get all the real data, have to run separate rmas for each nesting type
+# rma_parasite <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="brood parasite"))
+# rma_parasite
+# 
+# rma_building <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="building"))
+# rma_building
+# 
+# rma_cavity <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="cavity"))
+# rma_cavity
+# 
+# rma_ground <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="ground"))
+# rma_ground
+# 
+# rma_shrub <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="shrub"))
+# rma_shrub
+# 
+# rma_tree <- rma(
+#   yi,  # outcome
+#   vi,  # measure of variance
+#   method = "REML",
+#   data = effect_sizes_abundance,
+#   subset = (Nesting_Location=="tree"))
+# rma_tree
