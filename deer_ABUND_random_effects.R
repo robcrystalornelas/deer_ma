@@ -28,7 +28,9 @@ effect_sizes_abundance <-
 random_effects_abundance_results <-
   rma(yi = effect_sizes_abundance$yi, # Outcome variable
       vi = effect_sizes_abundance$vi,# Variance
-      method = "REML") # REML is common estimator
+      method = "REML",
+      weighted = TRUE) # REML is common estimator
+random_effects_abundance_results
 
 ## Mixed effects meta-analytic model account for data coming from the same articles
 mixed_effects_abundance <- rma.mv(yi, vi, random = ~ 1 | author, data = effect_sizes_abundance)

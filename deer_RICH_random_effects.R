@@ -40,6 +40,9 @@ richness_rma_dl <-
   )
 summary(richness_rma_dl)
 
+mixed_effects_richness <- rma.mv(yi, vi, random = ~ 1 | author, data = richness_effect_sizes)
+mixed_effects_richness
+
 ## Make forest plots ####
 richness_effect_sizes <- richness_effect_sizes[order(richness_effect_sizes$pub_year),]
 richness_effect_sizes$pub_year
