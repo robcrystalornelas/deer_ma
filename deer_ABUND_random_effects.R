@@ -27,14 +27,12 @@ effect_sizes_abundance <-
 # random effects model, assigning random effect to each row in database
 random_effects_abundance_results <-
   rma(yi = effect_sizes_abundance$yi, # Outcome variable
-      vi = effect_sizes_abundance$vi, # Variance
+      vi = effect_sizes_abundance$vi,# Variance
       method = "REML") # REML is common estimator
-print(random_effects_abundance_results, digits = 3)
 
 ## Mixed effects meta-analytic model account for data coming from the same articles
-mixed_effects_abundance_v2 <- rma.mv(yi, vi, random = ~ 1 | unique_id, data = effect_sizes_abundance)
-mixed_effects_abundance_v2
-
+mixed_effects_abundance <- rma.mv(yi, vi, random = ~ 1 | author, data = effect_sizes_abundance)
+mixed_effects_abundance
 
 # figures ####
 # First, order by years

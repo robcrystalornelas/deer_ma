@@ -65,7 +65,7 @@ forest(
   annotate = FALSE,
   xlab = "Hedge's g",
   slab = richness_study_labels,
-  ylim = c(-1,10),
+  #ylim = c(-1,10),
   cex = 1.3,
   pch = 15,
   cex.lab = 1.3,
@@ -80,5 +80,5 @@ forest(
     rep('#f9b641ff', 1),
     rep('#404788FF', 1),
     rep ("#3CBB75FF", 1)))
-addpoly(random_effects_abundance_results, row = 0 , cex = 1.5,col ="black", annotate = TRUE, mlab = "Summary")
+addpoly(richness_rma_dl, row = .5 , cex = 1.3,col ="black", annotate = TRUE, mlab = "Summary")
 dev.off()
