@@ -53,7 +53,8 @@ abundance_hist <-ggplot(effect_sizes_abundance, aes(x=yi)) +
   xlab("Hedges' g") +
   theme_cowplot() +
   theme(plot.title = element_text(size = 25, hjust = -.06, face = "bold"),
-        axis.title = element_text(size = 25, face = "bold")) +
+        axis.title = element_text(size = 25, face = "bold"),
+        axis.text = element_text(size = 18)) +
   scale_y_continuous(expand = c(0,0),limits=c(0,20))
 abundance_hist
 
@@ -64,7 +65,8 @@ richness_hist <-ggplot(richness_effect_sizes, aes(x=yi)) +
   xlab("Hedges' g") +
   theme_cowplot() +
   theme(plot.title = element_text(size = 25, hjust = -.06, face = "bold"),
-        axis.title = element_text(size = 25, face = "bold")) +
+        axis.title = element_text(size = 25, face = "bold"),
+        axis.text = element_text(size = 18)) +
   
   scale_y_continuous(expand = c(0,0),limits=c(0,2))
 richness_hist

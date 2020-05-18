@@ -72,16 +72,17 @@ forest(
   cex = 1.3,
   pch = 15,
   cex.lab = 1.3,
-  col = c(
-    rep('#73D055FF', 1),
-    rep('#cc6a70ff', 1),
-    rep("#1F968BFF", 1),
-    rep("#1F968BFF", 1),
-    rep("#1F968BFF", 1),
-    rep('#F66B4D', 1),
-    rep('#481567FF', 1),
-    rep('#f9b641ff', 1),
-    rep('#404788FF', 1),
-    rep ("#3CBB75FF", 1)))
-addpoly(richness_rma_dl, row = .5 , cex = 1.3,col ="black", annotate = TRUE, mlab = "Summary")
+  # col = c(
+  #   rep('#73D055FF', 1),
+  #   rep('#cc6a70ff', 1),
+  #   rep("#1F968BFF", 1),
+  #   rep("#1F968BFF", 1),
+  #   rep("#1F968BFF", 1),
+  #   rep('#F66B4D', 1),
+  #   rep('#481567FF', 1),
+  #   rep('#f9b641ff', 1),
+  #   rep('#404788FF', 1),
+  #   rep ("#3CBB75FF", 1))
+  )
+addpoly(richness_rma_dl, row = .5 , cex = 1.3,col ="#eb8055ff", annotate = TRUE, mlab = "Summary")
 dev.off()
