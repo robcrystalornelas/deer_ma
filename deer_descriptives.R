@@ -4,7 +4,7 @@ library(tidyverse)
 library(cowplot)
 
 ## Load data ####
-source("/Users/rpecchia/Desktop/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R")
+source("~/Desktop/research/side_projects/Crystal-Ornelas_et_al_deer_meta/scripts/deer_ma/deer_source_data.R")
 
 # subset only studies that we include in the meta-analysis
 descriptives_abundance
@@ -12,7 +12,7 @@ all_studies_combined <- rbind(descriptives_richness,descriptives_abundance)
 dim(all_studies_combined)
 unique_studies <- unique(all_studies_combined)
 unique_studies
-unique_studies <- slice(unique_studies, c(1,2,3,4,5,6,7,8,10,12,14))
+unique_studies <- slice(unique_studies, c(1,2,3,4,5,6,7,8,9,10,11,12,14,16,19,20,23))
 unique_studies
 
 # Average study length
@@ -21,6 +21,7 @@ mean(study_lengths/365)
 sd(study_lengths/365)
 mean(unique_studies$experiment_length_in_days, na.rm = TRUE)/365
 
+
 # Longest study
 max(unique_studies$experiment_length_in_days, na.rm = TRUE)/365
                
@@ -28,15 +29,13 @@ max(unique_studies$experiment_length_in_days, na.rm = TRUE)/365
 min(unique_studies$experiment_length_in_days, na.rm = TRUE)
 
 # Geographic location
-levels(unique_studies$country)
-plot(unique_studies$country)
+plyr::count(unique_studies$country)
 
 # Island vs. mainland
-plot(unique_studies$island_or_mainland)
+plyr::count(unique_studies$island_or_mainland)
 
 # native or invasive
-plot(unique_studies$native_or_nonnative)
-unique_studies$native_or_nonnative
+plyr::count(unique_studies$native_or_nonnative)
 
 # number of bird species
 unique(abundance_raw_data$bird_species_latin)
@@ -49,6 +48,7 @@ total_species_per_paper <- abundance_raw_data %>%
   summarise(count=n())
 mean(total_species_per_paper$count)
 sd(total_species_per_paper$count)
+total_species_per_paper
 
 # Number of sites we have data from abundance
 unique_sites_and_code <- select(descriptives_abundance, sample_size_t, sample_size_c, unique_id) %>%

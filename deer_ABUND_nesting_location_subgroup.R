@@ -27,6 +27,11 @@ effect_sizes_abundance <-
 # show the resulting data
 effect_sizes_abundance 
 
+# Subset only nesting locations greater than 7
+plyr::count(abundance_raw_data$Nesting_Location)
+nesting_locations_with_more_than_seven <- effect_sizes_abundance %>% filter(Nesting_Location == "cavity" | Nesting_Location == "ground" | Nesting_Location == "shrub" | Nesting_Location == "tree")
+plyr::count(nesting_locations_with_more_than_seven$Nesting_Location)
+
 ## Only for nesting location
 mixed_effect_abundance_nesting <- rma.mv(
   yi,  # outcome
@@ -35,32 +40,27 @@ mixed_effect_abundance_nesting <- rma.mv(
   random = ~ 1 | unique_id,
   method = "REML",
   digits = 4,
-  data = effect_sizes_abundance
+  data = nesting_locations_with_more_than_seven
 )
 mixed_effect_abundance_nesting
 
 # Forest plot nesting data
-subgroup_samplesize <- c(2,1,25,28,37,38)
+subgroup_samplesize <- c(44,40,45,58)
 forest_plot_nesting_location <- forest(mixed_effect_abundance_nesting$b,
                                      ci.lb = mixed_effect_abundance_nesting$ci.lb,
                                      ci.ub = mixed_effect_abundance_nesting$ci.ub,
                                      ilab = subgroup_samplesize,
-                                     ilab.xpos = c(-4),
+                                     ilab.xpos = c(-1.2),
                                      annotate = TRUE,
                                      xlab = "Hedges' g",
-                                     slab = c("Brood parasite", "Building", "Cavity","Ground","Shrub","Tree"),
-                                     cex = 2,
-)
+                                     slab = c("Cavity", "Ground", "Shrub","Tree"),
+                                     cex = 2)
 
 op <- par(cex=2, font=2)
-text(-8, 7.2, "Location")
-text(-4, 7.2, "Sample Size")
-text(8.3, 7.2, "Hedges' g [95% CI]")
+text(-1.75, 5.2, "Location")
+text(-1.2, 5.2, "Sample Size")
+text(.9, 5.2, "Hedges' g [95% CI]")
 dev.off()
 
 
 # first, if we want to add in any summary-level info create a new summary table
-summary_table_nesting_locations <- data.frame(
-  "Location" = c("Brood Parasite","Building","Cavity","Ground","Shrub","Tree"),
-  N = c(2,1,25,28,37,38))
-head(summary_table_nesting_locations)
